@@ -6,8 +6,8 @@
 <title>성전으로 가는 한 주</title>
 <meta name="description" content="8월 24일 월요일부터 29일 토요일까지, 패밀리트리 앱에 조상을 올리고 제적등본을 떼어 성전에 가져갈 QR 코드까지 준비하는 하루하루 안내입니다.">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F2F3EF">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121614">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F2F3EF">
 
 <!-- 카카오톡·페이스북 공유 미리보기 -->
 <meta property="og:type" content="website">
@@ -25,10 +25,13 @@
 /* ─────────────────────────────────────────────────────────────
    성전으로 가는 한 주 — 2026년 8월 24일(월) ~ 29일(토)
    먹(ink) · 청록(jade) · 인주(seal) — 제적부의 세로 괘선에서 온 판면
+   라이트 테마 전용: 보는 기기가 다크 모드여도 이 판면 그대로 나옵니다.
    ───────────────────────────────────────────────────────────── */
 
 :root {
+  color-scheme: light;   /* 기기가 다크 모드여도 스크롤바·기본 컨트롤까지 라이트로 */
   --paper:      #F2F3EF;
+  --paper-rgb:  242, 243, 239;
   --paper-deep: #E7E9E3;
   --card:       #FBFBF9;
   --ink:        #161C19;
@@ -48,41 +51,6 @@
   --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
 
   --head-h: 60px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper:      #121614;
-    --paper-deep: #0C100E;
-    --card:       #1A201D;
-    --ink:        #E8EBE6;
-    --ink-2:      #9BA69F;
-    --ink-3:      #7B857E;
-    --rule:       #2B332F;
-    --rule-faint: #232A26;
-    --jade:       #63C3AC;
-    --jade-2:     #7FD3BE;
-    --jade-soft:  #1D2E29;
-    --on-jade:    #0E1513;
-    --seal:       #E4796A;
-    --shadow:     0 1px 2px rgba(0,0,0,.4), 0 10px 30px -18px rgba(0,0,0,.9);
-  }
-}
-:root[data-theme="dark"] {
-  --paper:      #121614;
-  --paper-deep: #0C100E;
-  --card:       #1A201D;
-  --ink:        #E8EBE6;
-  --ink-2:      #9BA69F;
-  --ink-3:      #7B857E;
-  --rule:       #2B332F;
-  --rule-faint: #232A26;
-  --jade:       #63C3AC;
-  --jade-2:     #7FD3BE;
-  --jade-soft:  #1D2E29;
-  --on-jade:    #0E1513;
-  --seal:       #E4796A;
-  --shadow:     0 1px 2px rgba(0,0,0,.4), 0 10px 30px -18px rgba(0,0,0,.9);
 }
 
 * { box-sizing: border-box; }
@@ -111,8 +79,7 @@ a:hover { color: var(--jade-2); }
 
 .rail {
   position: sticky; top: 0; z-index: 50;
-  background: color-mix(in srgb, var(--paper) 88%, transparent);
-  backdrop-filter: blur(14px) saturate(1.2);
+  background: var(--paper);
   border-bottom: 1px solid var(--rule);
 }
 .rail-in {
@@ -122,16 +89,39 @@ a:hover { color: var(--jade-2); }
   display: flex; align-items: center; gap: clamp(10px, 3vw, 28px);
 }
 .rail-mark {
+  flex: none;
   font-family: var(--f-display); font-weight: 700;
   font-size: 15px; letter-spacing: -.01em; white-space: nowrap;
   color: var(--ink);
 }
 .rail-mark span { color: var(--jade); }
+.chips-wrap { position: relative; margin-left: auto; min-width: 0; }
 .chips {
-  display: flex; gap: 4px; margin-left: auto;
+  display: flex; gap: 4px; min-width: 0;
   overflow-x: auto; scrollbar-width: none; padding: 4px 0;
 }
 .chips::-webkit-scrollbar { display: none; }
+/* 아직 볼 칩이 남은 쪽에서 칩이 바탕색으로 스러집니다 — 잘린 조각이 곧
+   "옆에 더 있다"는 신호입니다. 앞쪽 절반은 완전히 지워 확실히 눈에 띄게 합니다. */
+.chips-wrap::before,
+.chips-wrap::after {
+  content: ""; position: absolute; top: 0; bottom: 0; width: 58px; z-index: 2;
+  pointer-events: none; opacity: 0; transition: opacity .2s ease;
+}
+.chips-wrap::before {
+  left: 0;
+  background: linear-gradient(to right,
+    rgba(var(--paper-rgb), 1) 0%, rgba(var(--paper-rgb), 1) 34%,
+    rgba(var(--paper-rgb), .72) 62%, rgba(var(--paper-rgb), 0) 100%);
+}
+.chips-wrap::after {
+  right: 0;
+  background: linear-gradient(to left,
+    rgba(var(--paper-rgb), 1) 0%, rgba(var(--paper-rgb), 1) 34%,
+    rgba(var(--paper-rgb), .72) 62%, rgba(var(--paper-rgb), 0) 100%);
+}
+.chips-wrap[data-more-l="1"]::before { opacity: 1; }
+.chips-wrap[data-more-r="1"]::after { opacity: 1; }
 .chip {
   appearance: none; border: 1px solid transparent; background: transparent;
   color: var(--ink-2); cursor: pointer; text-decoration: none;
@@ -149,7 +139,7 @@ a:hover { color: var(--jade-2); }
   background: conic-gradient(currentColor calc(var(--p, 0) * 1%), color-mix(in srgb, currentColor 22%, transparent) 0);
   box-shadow: inset 0 0 0 1.5px color-mix(in srgb, currentColor 30%, transparent);
 }
-@media (max-width: 600px) { .rail-mark { font-size: 13px; } .rail-in { gap: 10px; } }
+@media (max-width: 600px) { .rail-mark { font-size: 13px; } .rail-in { gap: 10px; padding-inline: 12px; } }
 .chip .num { font-size: 12.5px; letter-spacing: .01em; opacity: .9; font-variant-numeric: tabular-nums; }
 
 /* ── 히어로 ─────────────────────────────────────────────────── */
@@ -450,7 +440,9 @@ footer .fine + .fine { margin-top: 10px; }
 <nav class="rail" aria-label="이번 주 미션">
   <div class="rail-in">
     <div class="rail-mark">성전으로 가는 <span>한 주</span></div>
-    <div class="chips" id="chips" role="tablist"></div>
+    <div class="chips-wrap" id="chips-wrap">
+      <div class="chips" id="chips" role="tablist"></div>
+    </div>
   </div>
 </nav>
 
@@ -987,7 +979,8 @@ footer .fine + .fine { margin-top: 10px; }
     a.href = "#" + d.id;
     a.dataset.for = d.id;
     a.setAttribute("role", "tab");
-    a.innerHTML = '<span class="dot" aria-hidden="true"></span><span class="num">' + d.label + " " + d.dd + "</span>";
+    a.innerHTML = '<span class="dot" aria-hidden="true"></span>'
+                + '<span class="num">' + d.label + '<span class="dd"> ' + d.dd + '</span></span>';
     a.setAttribute("aria-label", d.name + " · 8월 " + d.dd + "일 " + d.label + "요일");
     chips.appendChild(a);
     if (idx === todayIdx) {
@@ -995,11 +988,32 @@ footer .fine + .fine { margin-top: 10px; }
     }
   });
 
-  function centerChip(el) {
-    if (chips.scrollWidth <= chips.clientWidth) return;
-    var want = el.offsetLeft - (chips.clientWidth - el.offsetWidth) / 2;
+  var wrap = document.getElementById("chips-wrap");
+
+  /* 아직 볼 칩이 남은 쪽에만 어두운 그라데이션을 켭니다. */
+  function updateFade() {
     var max = chips.scrollWidth - chips.clientWidth;
-    chips.scrollLeft = Math.max(0, Math.min(max, want));
+    wrap.setAttribute("data-more-l", max > 1 && chips.scrollLeft > 2 ? "1" : "0");
+    wrap.setAttribute("data-more-r", max > 1 && chips.scrollLeft < max - 2 ? "1" : "0");
+  }
+  chips.addEventListener("scroll", updateFade, { passive: true });
+
+  /* 활성 칩을 보이는 영역 한가운데로 데려옵니다. 양 끝 가까이에서는 끝까지
+     붙여, 첫 칩이나 마지막 칩이 어중간하게 잘린 채 걸리지 않게 합니다. */
+  function centerChip(el) {
+    var max = chips.scrollWidth - chips.clientWidth;
+    if (max <= 1) return;
+    // offsetLeft는 스티키 레일 기준이라 쓸 수 없습니다. 스크롤 컨테이너 기준으로 잽니다.
+    var rel = el.getBoundingClientRect().left - chips.getBoundingClientRect().left + chips.scrollLeft;
+    var want = rel - (chips.clientWidth - el.offsetWidth) / 2;
+    want = Math.max(0, Math.min(max, want));
+    if (want < 28) want = 0;
+    if (want > max - 28) want = max;
+    if (Math.abs(chips.scrollLeft - want) < 1) return;
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (chips.scrollTo) chips.scrollTo({ left: want, behavior: reduce ? "auto" : "smooth" });
+    else chips.scrollLeft = want;
+    updateFade();
   }
 
   function paintProgress() {
@@ -1013,23 +1027,47 @@ footer .fine + .fine { margin-top: 10px; }
     });
   }
   paintProgress();
+  updateFade();
 
-  /* ── 현재 보고 있는 날 표시 ─────────────────────────────── */
+  /* ── 현재 보고 있는 날 표시 ─────────────────────────────────
+     규칙: 레일 바로 아래 기준선을 마지막으로 지나간 섹션이 오늘 읽는 날입니다.
+     겹친 면적을 재는 방식보다 예측이 쉽고, 표시가 앞뒤로 튀지 않습니다. */
+  var rail = document.querySelector(".rail");
   var sections = DAYS.map(function (d) { return document.getElementById(d.id); });
-  if ("IntersectionObserver" in window) {
-    var visible = {};
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { visible[en.target.id] = en.isIntersecting ? en.intersectionRatio : 0; });
-      var best = null, bestVal = 0;
-      Object.keys(visible).forEach(function (k) { if (visible[k] > bestVal) { bestVal = visible[k]; best = k; } });
-      Array.prototype.forEach.call(chips.children, function (c) {
-        var on = c.dataset.for === best;
-        c.setAttribute("aria-current", on ? "true" : "false");
-        if (on) centerChip(c);
-      });
-    }, { rootMargin: "-70px 0px -55% 0px", threshold: [0, 0.15, 0.4, 0.75, 1] });
-    sections.forEach(function (s) { io.observe(s); });
+
+  function activeId() {
+    var line = (rail ? rail.offsetHeight : 60) + 28;
+    var id = null;
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i].getBoundingClientRect().top <= line) id = sections[i].id;
+    }
+    // 문서 끝에 닿으면 마지막 날을 확실히 켭니다(짧은 섹션이 기준선에 못 닿는 경우 대비).
+    var atBottom = window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight - 4;
+    if (atBottom) id = sections[sections.length - 1].id;
+    return id;
   }
+
+  var lastId = "\u0000";
+  function paintActive() {
+    var id = activeId();
+    if (id === lastId) return;
+    lastId = id;
+    Array.prototype.forEach.call(chips.children, function (c) {
+      var on = c.dataset.for === id;
+      c.setAttribute("aria-current", on ? "true" : "false");
+      if (on) centerChip(c);
+    });
+  }
+
+  var pending = false;
+  function onScroll() {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(function () { pending = false; paintActive(); });
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", function () { lastId = "\u0000"; updateFade(); paintActive(); });
+  paintActive();
 
   /* ── 오늘로 자동 이동 ───────────────────────────────────── */
   var toast = document.getElementById("toast");

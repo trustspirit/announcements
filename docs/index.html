@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>공지</title>
 <meta name="description" content="예수 그리스도 후기 성도 교회 회원을 위한 안내 페이지 모음입니다.">
+<meta name="color-scheme" content="light">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F2F3EF">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121614">
+<meta name="theme-color" content="#F2F3EF">
 <meta property="og:type" content="website">
 <meta property="og:title" content="공지">
 <meta property="og:description" content="예수 그리스도 후기 성도 교회 회원을 위한 안내 페이지 모음입니다.">
@@ -20,6 +20,7 @@
 
 <style>
 :root {
+  color-scheme: light;
   --paper:      #F2F3EF;
   --card:       #FBFBF9;
   --ink:        #161C19;
@@ -33,19 +34,6 @@
   --f-display: "Gowun Batang", "Nanum Myeongjo", "Apple SD Gothic Neo", serif;
   --f-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #121614; --card: #1A201D; --ink: #E8EBE6; --ink-2: #9BA69F; --ink-3: #7B857E;
-    --rule: #2B332F; --rule-faint: #232A26; --jade: #63C3AC; --jade-2: #7FD3BE;
-    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px -18px rgba(0,0,0,.9);
-  }
-}
-:root[data-theme="dark"] {
-  --paper: #121614; --card: #1A201D; --ink: #E8EBE6; --ink-2: #9BA69F; --ink-3: #7B857E;
-  --rule: #2B332F; --rule-faint: #232A26; --jade: #63C3AC; --jade-2: #7FD3BE;
-  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px -18px rgba(0,0,0,.9);
-}
-
 * { box-sizing: border-box; }
 body {
   margin: 0; background: var(--paper); color: var(--ink);
